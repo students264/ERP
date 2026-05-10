@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Management</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">&#127891 Admission Management</a>
+
+            <div class="d-flex gap-3">
+                <a href="/" class="btn btn-light btn-sm fw-bold">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+
+                <a href="/logout" class="btn btn-light btn-sm fw-bold">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card border-0 text-center p-4">
+
+                    <h4 class="text-danger fw-bold fst-italic mb-3">
+                        Progyan Education & Classic Computer Training Centre
+                    </h4>
+
+                    <img src="https://img.freepik.com/free-vector/vector-education-logo_779267-2083.jpg?semt=ais_hybrid&w=740&q=80"
+                         class="img-fluid rounded mx-auto d-block"
+                         style="max-width:150px;"
+                         alt="logo">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card text-center p-4 border-0">
+
+                    <h4 class="fw-bold mb-4">Manage Admission</h4>
+
+                    <div class="d-grid gap-3">
+                        <a href="/student/record/add" class="btn btn-primary">
+                            ➕ Add Record
+                        </a>
+
+                        <a href="/student/admission/list" class="btn btn-success">
+                            📋 Student List
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

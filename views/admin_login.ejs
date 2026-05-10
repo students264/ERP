@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="col-md-4">
+
+        <h5 class="text-center mb-3 fw-bold text-primary">
+            <i class="bi bi-mortarboard-fill"></i> Progyan Education
+        </h5>
+
+        <div class="card shadow border-0 rounded-4">
+            <div class="card-body p-4">
+
+                <h4 class="text-center mb-4">Admin Login</h4>
+
+                <form action="/admin_login" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">User ID</label>
+                        <input type="text" name="userid"
+                               class="form-control"
+                               placeholder="Enter your user id" required>
+                    </div>
+                    <div class="mb-3 position-relative">
+                        <label class="form-label">Password</label>
+
+                        <input type="password" name="password" id="password"
+                               class="form-control"
+                               placeholder="Enter password" required>
+                        <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3"
+                           style="cursor:pointer;"
+                           onclick="togglePassword()"></i>
+                    </div>
+                    <div class="text-end mb-3">
+                        <a href="/forgot-password" class="text-decoration-none small">
+                            Forgot Password?
+                        </a>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill">
+                        <i class="bi bi-box-arrow-in-right"></i> Sign In
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function togglePassword() {
+    const pass = document.getElementById("password");
+    const icon = event.target;
+
+    if (pass.type === "password") {
+        pass.type = "text";
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+    } else {
+        pass.type = "password";
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
+    }
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
