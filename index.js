@@ -8,6 +8,7 @@ const attandancemodel = require('./model/attandance')
 const paymentmodel = require('./model/payment')
 const employeeModel = require('./model/employee')
 const servicemodel = require('./model/service')
+const expencemodel = require('./model/expence')
 const cookieParser = require('cookie-parser');
 const app = express()
 const isLoggined = require('./middleware')
@@ -400,6 +401,74 @@ app.post('/income/edit/',async(req,res)=>{
     );
     if(result){
       return res.redirect('/income')
+    }
+  }
+  catch (err) {
+    console.error(err);
+    res.send('Update failed');
+  }
+})
+app.get('/expence',async(req,res)=>{
+  const data = await expencemodel.find()
+  return res.render('expence',{data})
+})
+app.post('/expence/insert', async (req, res) => {
+  try {
+    const { date, month , pay , mode , amount} = req.body;
+
+    await expencemodel.create({
+  Date: new Date(date),
+  Month: Array.isArray(month) ? month : [month],
+  Pay: pay,
+  Mode : Array.isArray(mode) ? mode : [mode],
+  Amount : amount
+});
+   res.redirect('/expence')
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("fail to send");
+  }
+});
+app.get('/expence/delete/:id',async(req,res)=>{
+    const id = req.params.id;
+    await expencemodel.deleteOne({_id : id})
+    return res.redirect('/expence')
+});
+app.get('/expence/edit/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const data = await expencemodel.findById(id);
+
+        return res.render('expence-update', { data });
+
+    } catch (err) {
+        console.log(err);
+        res.send("Error");
+    }
+});
+app.post('/expence/edit/',async(req,res)=>{
+  try{
+  const {id,
+      date,
+      month,
+      pay,
+      mode,
+      amount}=req.body
+    const result = await expencemodel.updateOne(
+      { _id: id },
+      {
+        $set: {
+           Date : new Date(date),
+           Month: Array.isArray(month) ? month : [month],
+           Pay: pay,
+           Mode: Array.isArray(mode) ? mode : [mode],
+           Amount: amount
+        }
+      }
+    );
+    if(result){
+      return res.redirect('/expence')
     }
   }
   catch (err) {

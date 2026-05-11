@@ -9,7 +9,7 @@
 <body class="bg-light">
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">Fees Management</a>
+            <a class="navbar-brand fw-bold" href="#">Expence Management</a>
 
             <div class="d-flex gap-3">
                 <a href="/" class="btn btn-light btn-sm fw-bold">
@@ -27,51 +27,47 @@
     <div class="col-lg-6 col-md-8">
       <div class="card border shadow-sm">
         <div class="card-header bg-white border-bottom text-center">
-          <h5 class="mb-0 fw-semibold">Update payment Record</h5>
+          <h5 class="mb-0 fw-semibold">Update expence Record</h5>
         </div>
         <div class="card-body">
-          <form action="/income/edit/" method="POST">
+          <form action="/expence/edit/" method="POST">
   <input type="hidden" name="id" value="<%= data._id %>">
   <div class="mb-3">
     <label class="form-label small fw-semibold">Date</label>
     <input type="date" name="date" class="form-control"
            value="<%= data.Date ? new Date(data.Date).toISOString().split('T')[0] : '' %>" required>
   </div>
-  <div class="mb-3">
-    <label class="form-label small fw-semibold">Account</label>
-    <select name="pay" class="form-control" required>
-      <option><%= data.Account %></option>
-
-      <option value="Mark Hotel" <%= data.Account === 'Mark Hotel' ? 'selected' : '' %>>Mark Hotel</option>
-      <option value="Hotel Hw" <%= data.Account === 'Hotel Hw' ? 'selected' : '' %>>Hotel Hw</option>
-      <option value="Market income" <%= data.Account === 'Market income' ? 'selected' : '' %>>Market income</option>
-      <option value="others income" <%= data.Account === 'others income' ? 'selected' : '' %>>others income</option>
-      <option value="Loan" <%= data.Account === 'Loan' ? 'selected' : '' %>>Loan</option>
-      <option value="Capital investment" <%= data.Account === 'Capital investment' ? 'selected' : '' %>>Capital investment</option>
-    </select>
-  </div>
   <div class="mb-4">
-  <label class="form-label small fw-semibold">Payment</label>
+  <label class="form-label small fw-semibold">Month</label>
 
-  <select name="type" class="form-control" required>
-    <option><%= data.payment %></option>
-
-    <option value="Down Payment" <%= data.payment === 'Down Payment' ? 'selected' : '' %>>Down Payment</option>
-    <option value="Monthly Fee" <%= data.payment === 'Monthly Fee' ? 'selected' : '' %>>Monthly Fee</option>
-    <option value="Others" <%= data.payment === 'Others' ? 'selected' : '' %>>Others</option>
+  <select name="month" class="form-control" required>
+    <option><%= data.Month %></option>
+    <option value="January" <%= data.month === 'January' ? 'selected' : '' %>>January</option>
+    <option value="February" <%= data.month === 'February' ? 'selected' : '' %>>February</option>
+    <option value="March" <%= data.month === 'March' ? 'selected' : '' %>>March</option>
+    <option value="April" <%= data.month === 'April' ? 'selected' : '' %>>April</option>
+    <option value="May" <%= data.month === 'May' ? 'selected' : '' %>>May</option>
+    <option value="June" <%= data.month === 'June' ? 'selected' : '' %>>June</option>
+    <option value="July" <%= data.month === 'July' ? 'selected' : '' %>>July</option>
+    <option value="August" <%= data.month === 'August' ? 'selected' : '' %>>August</option>
+    <option value="September" <%= data.month === 'September' ? 'selected' : '' %>>September</option>
+    <option value="October" <%= data.month === 'October' ? 'selected' : '' %>>October</option>
+    <option value="November" <%= data.month === 'November' ? 'selected' : '' %>>November</option>
+    <option value="December" <%= data.month === 'December' ? 'selected' : '' %>>December</option>
   </select>
 </div>
+  <div class="mb-3">
+    <label class="form-label small fw-semibold">Pay</label>
+    <input type="text" name="pay" class="form-control"
+        value="<%= data.Pay %>" required>
+  </div>
 <div class="mb-4">
   <label class="form-label small fw-semibold">Mode</label>
-
   <select name="mode" class="form-control" required>
     <option><%= data.Mode %></option>
-    
     <option value="CASH" <%= data.Mode === 'CASH' ? 'selected' : '' %>>CASH</option>
     <option value="UPI" <%= data.Mode === 'UPI' ? 'selected' : '' %>>UPI</option>
-    <option value="CHEQUE" <%= data.Mode === 'CHEQUE' ? 'selected' : '' %>>CHEQUE</option>
     <option value="NEFT" <%= data.Mode === 'NEFT' ? 'selected' : '' %>>NEFT</option>
-    <option value="Others" <%= data.Mode === 'Others' ? 'selected' : '' %>>Others</option>
   </select>
 </div>
   <div class="mb-3">
