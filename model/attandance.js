@@ -10,13 +10,17 @@ const attendanceSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
-    status: {
-        type: [String],
+    Status: {
+        type: String,
         required: true,
     },
     Month: {
-        type: [String],
+        type: String,
         required: true,
+    },
+    Day: {
+        type: String,
+        required: true
     }
 }, { timestamps: true })
 

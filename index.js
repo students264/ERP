@@ -12,6 +12,7 @@ const expencemodel = require('./model/expence')
 const cookieParser = require('cookie-parser');
 const app = express()
 const isLoggined = require('./middleware')
+const attendanceModel = require('./model/attandance')
 require('dotenv').config()
 const port = process.env.PORT
 app.use(cookieParser())
@@ -49,11 +50,8 @@ app.get('/user/token/login', isLoggined,(req, res) => {
 app.get('/student/record/add',isLoggined,(req,res)=>{
     return res.render('Add_record')
 })
-app.get('/student/attandance/add',isLoggined,(req,res)=>{
-    return res.render('Add_attandance')
-})
 app.get('/student/attandance/list',isLoggined,async(req,res)=>{
-    let data = await attandancemodel.find()
+    let data = await studentmodel.find()
     return res.render('List_attandance',{data})
 })
 app.get('/student/payment',async(req,res)=>{
@@ -120,21 +118,26 @@ app.post('/student/add', async (req, res) => {
     res.status(500).send("fail to send");
   }
 });
-app.post('/student/attendance', async (req, res) => {
+app.post('/add', async (req, res) => {
   try {
-    const { name, date, status, month} = req.body;
 
-    await attandancemodel.create({
-  s_name: name,
-  Date: new Date(date),
-  status : Array.isArray(status) ? status : [status],
-  Month : Array.isArray(month) ? month : [month]
-});
+    const { name,date,day,month,status} = req.body;
+
+    await attendanceModel.create(
+      {
+        s_name: name,
+        Date: date,
+        Status: status,
+        Month: month,
+        Day:day
+      }
+    );
+
     res.redirect('/student/attandance/list');
 
   } catch (err) {
     console.error(err);
-    res.status(500).send("fail to send");
+    res.status(500).send("fail to update");
   }
 });
 app.post('/employee', async (req, res) => {
@@ -414,13 +417,14 @@ app.get('/expence',async(req,res)=>{
 })
 app.post('/expence/insert', async (req, res) => {
   try {
-    const { date, month , pay , mode , amount} = req.body;
+    const { date, month , pay , mode ,receiver, amount} = req.body;
 
     await expencemodel.create({
   Date: new Date(date),
   Month: Array.isArray(month) ? month : [month],
   Pay: pay,
   Mode : Array.isArray(mode) ? mode : [mode],
+  Reciept: receiver,
   Amount : amount
 });
    res.redirect('/expence')
@@ -454,6 +458,7 @@ app.post('/expence/edit/',async(req,res)=>{
       month,
       pay,
       mode,
+      receiver,
       amount}=req.body
     const result = await expencemodel.updateOne(
       { _id: id },
@@ -463,6 +468,7 @@ app.post('/expence/edit/',async(req,res)=>{
            Month: Array.isArray(month) ? month : [month],
            Pay: pay,
            Mode: Array.isArray(mode) ? mode : [mode],
+           Reciept: receiver,
            Amount: amount
         }
       }

@@ -33,12 +33,17 @@ const studentSchema = new mongoose.Schema({
         type: [String],
         required: true,
     },
-
+    
     Month: {
         type: [String],
         required: true,
+    },
+    A_Date: {
+        type: Date,
+    },
+    Status: {
+        type: String,
     }
-
 }, { timestamps: true })
 
 const studentmodel = mongoose.model('student', studentSchema)

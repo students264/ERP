@@ -28,103 +28,72 @@
     <div class="container my-5">
 
   <!-- FORM (TOP) -->
-  <div class="card border-0 p-3 mb-4">
+  <div class="border-0 p-3 mb-2">
     <h1 class="text-center fw-semibold mb-3">Progyan Education</h1>
-    <h5 class="text-center fw-semibold mb-4 mt-4">Attendance</h5>
-
-    <form action="/student/attendance" method="POST">
-      <div class="row g-2 align-items-end">
-
-        <div class="col-md-3">
-          <input type="text" name="name" class="form-control" placeholder="Name" required>
-        </div>
-
-        <div class="col-md-2">
-          <input type="date" name="date" class="form-control" required>
-        </div>
-
-        <div class="col-md-2">
-          <select name="status" class="form-control" required>
-            <option value="">Status</option>
-            <option value="Present">Present</option>
-            <option value="Absent">Absent</option>
-          </select>
-        </div>
-
-        <div class="col-md-2">
-          <select name="month" class="form-control" required>
-            <option value="">Month</option>
-            <option>January</option>
-            <option>February</option>
-            <option>March</option>
-            <option>April</option>
-            <option>May</option>
-            <option>June</option>
-            <option>July</option>
-            <option>August</option>
-            <option>September</option>
-            <option>October</option>
-            <option>November</option>
-            <option>December</option>
-          </select>
-        </div>
-
-        <div class="col-md-2 d-grid">
-          <button type="submit" class="btn btn-primary fw-semibold">
-            Add
-          </button>
-        </div>
-
-      </div>
-    </form>
+   <h5 class="text-center fw-semibold mb-4 mt-4">
+  Attendance Sheet of 
+  <%= new Date().toLocaleString('en-US', { month: 'long' }) %>
+  <%= new Date().getFullYear() %>
+</h5>
   </div>
-
-  <!-- TABLE (BOTTOM) -->
-  <div class="card border shadow-sm p-3 mt-5">
-
-    <!-- SEARCH -->
-    <div class="input-group mb-3">
-      <span class="input-group-text bg-primary text-white">
-        <i class="bi bi-search"></i>
-      </span>
-      <input type="text" id="searchInput" class="form-control" placeholder="Search attendance...">
-      <button class="btn btn-primary" onclick="searchTable()">Search</button>
-      <button class="btn btn-outline-secondary" onclick="resetTable()">Reset</button>
-    </div>
-
-    <!-- TABLE -->
+  <div class="card border p-3 mt-1">
     <div class="table-responsive">
       <table class="table table-hover table-bordered text-center">
         <thead class="table-primary">
           <tr>
             <th>Name</th>
             <th>Date</th>
-            <th>Status</th>
+            <th>Day</th>
             <th>Month</th>
-            <th>Update</th>
+            <th>Status</th>
             <th>Delete</th>
           </tr>
         </thead>
-
         <tbody id="tableBody">
           <% if (!data || data.length === 0) { %>
           <tr>
             <td colspan="6" class="text-muted">No records</td>
           </tr>
           <% } %>
-
           <% data.forEach(function(item) { %>
           <tr>
-            <td><%= item.s_name %></td>
-            <td><%= new Date(item.Date).toLocaleDateString('en-CA') %></td>
-            <td><%= item.status %></td>
-            <td><%= item.Month %></td>
+            <form action="/add" method="post">
             <td>
-              <a href="/student/attendance/<%= item._id %>" class="btn btn-sm btn-success">Update</a>
+              <input type="text" name="name" value = "<%= item.s_name %>" 
+              class="mb-2 border-0 text-center" readonly>
             </td>
             <td>
-              <a href="/student/attendance/delete/<%= item._id %>" class="btn btn-sm btn-danger">Delete</a>
+              <input type="date" name="date" class="mb-2 status-field border-0 text-center" readonly
+              value="<%= new Date().toLocaleDateString('en-CA') %>">
             </td>
+           <td>
+            <input type="text" name="day" class="mb-2 border-0 text-center" readonly
+              value="<%= new Date().toLocaleString('en-US', { weekday: 'long' }) %>">
+            </td>
+           <td>
+            <input type="text" name="month" class="mb-2 border-0 text-center" readonly
+              value="<%= new Date().toLocaleString('en-US', { month: 'long' }) %>">
+            </td>
+          </td>
+            <td>
+                <input type="hidden" name="id" value="<%= item._id %>">
+  <input type="text" name="status" class="mb-2 status-field border-0 text-center" readonly>
+  <button type="button"
+          class="btn btn-sm btn-success attendance-btn rounded-5"
+          onclick="setAttendance(this, 'Present')">
+    P
+  </button>
+
+  <button type="button"
+          class="btn btn-sm btn-danger attendance-btn rounded-5"
+          onclick="setAttendance(this, 'Absent')">
+    A
+  </button>
+</td>
+            <td>
+              <button type="submit" class="btn btn-sm btn-primary px-4 mt-2">Add</button>
+            </td>
+          </form>
           </tr>
           <% }) %>
         </tbody>
@@ -137,23 +106,28 @@
 </div>
 
     <script>
-        function searchTable() {
-            let filter = document.getElementById("searchInput").value.toLowerCase();
-            let rows = document.querySelectorAll("#tableBody tr");
-
-            rows.forEach(row => {
-                let text = row.innerText.toLowerCase();
-                row.style.display = text.includes(filter) ? "" : "none";
-            });
-        }
-
-        function resetTable() {
-            document.getElementById("searchInput").value = "";
-            let rows = document.querySelectorAll("#tableBody tr");
-            rows.forEach(row => row.style.display = "");
-        }
+  function setAttendance(button, status) {
+    let td = button.parentElement;
+    let buttons = td.querySelectorAll(".attendance-btn");
+    let statusField = td.querySelector(".status-field");
+    buttons.forEach(btn => {
+      btn.classList.remove("btn-success", "btn-danger");
+      if (btn.innerText.trim() === "Present") {
+        btn.classList.add("btn-outline-success");
+      } else {
+        btn.classList.add("btn-outline-danger");
+      }
+    });
+    if (status === "Present") {
+      button.classList.remove("btn-outline-success");
+      button.classList.add("btn-success");
+    } else {
+      button.classList.remove("btn-outline-danger");
+      button.classList.add("btn-danger");
+    }
+    statusField.value = status;
+  }
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

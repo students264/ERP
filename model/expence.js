@@ -17,6 +17,10 @@ const expenceSchema = new mongoose.Schema({
         type:[String],
         required: true,
     },
+    Reciept: {
+        type: String,
+        required: true,
+    },
     Amount: {
         type:Number,
         required:true

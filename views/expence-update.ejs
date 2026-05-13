@@ -70,6 +70,11 @@
     <option value="NEFT" <%= data.Mode === 'NEFT' ? 'selected' : '' %>>NEFT</option>
   </select>
 </div>
+<div class="mb-3">
+    <label class="form-label small fw-semibold">Receiver</label>
+    <input type="text" name="receiver" class="form-control"
+           value="<%= data.Reciept %>" required>
+  </div>
   <div class="mb-3">
     <label class="form-label small fw-semibold">Amount</label>
     <input type="number" name="amount" class="form-control"

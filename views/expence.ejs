@@ -64,6 +64,10 @@
             </select>
         </div>
         <div class="col">
+            <label class="form-label fw-bold">Receiver</label>
+            <input type="text" name="receiver" class="form-control" placeholder="Enter Receiver name" required>
+        </div>
+        <div class="col">
             <label class="form-label fw-bold">Amount</label>
             <input type="number" name="amount" class="form-control" placeholder="Enter the Amount" required>
         </div>
@@ -100,6 +104,7 @@
                             <th>Month</th>
                             <th>Pay In</th>
                             <th>Mode</th>
+                            <th>Receiver</th>
                             <th>&#8377 Amount</th>
                             <th>Update</th>
                             <th>Delete</th>
@@ -121,6 +126,7 @@
             <td><%= item.Month && item.Month.length > 0 ? item.Month[0] : '' %></td>
             <td><%= item.Pay %></td>
             <td><%= item.Mode && item.Mode.length > 0 ? item.Mode[0] : '' %></td>
+            <td><%= item.Reciept %></td>
             <td><%= item.Amount %></td>
             <td>
                 <a href="/expence/edit/<%= item._id %>" class="btn btn-sm btn-success">
