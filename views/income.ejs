@@ -29,13 +29,31 @@
             <div class="row">
                 <div class="col-12">
                     <h1 class="text-center fs-3 fw-bold text-dark mb-3">Progyan Education</h1>
-                    <p class="text-center fs-5 fw-semibold mb-5">Income</p>
+                    <p class="text-center fs-5 fw-semibold mb-5">Income From Service</p>
                     <form action="/income/insert" method="post">
     <div class="row g-2 align-items-end">
         <div class="mb-3">
                 <label class="form-label small fw-semibold">Date</label>
                 <input type="date" name="date" class="form-control" required style="width:400px;">
         </div>
+        <div class="mb-3">
+                <label class="form-label small fw-semibold">Month</label>
+                <select name="month" class="form-control" required style="width:300px;">
+                  <option value="">Select Month</option>
+                  <option>January</option>
+                  <option>February</option>
+                  <option>March</option>
+                  <option>April</option>
+                  <option>May</option>
+                  <option>June</option>
+                  <option>July</option>
+                  <option>August</option>
+                  <option>September</option>
+                  <option>October</option>
+                  <option>November</option>
+                  <option>December</option>
+                </select>
+              </div>
         <div class="col">
             <label class="form-label fw-bold">Account</label>
             <select name="pay" class="form-select" required>
@@ -102,7 +120,8 @@
 
                     <thead class="table-primary">
                         <tr>
-                            <th>Joining Date</th>
+                            <th>Date</th>
+                            <th>Month</th>
                             <th>On Account of</th>
                             <th>Payment Type</th>
                             <th>Mode</th>
@@ -124,6 +143,7 @@
     <% data.forEach(function(item) { %>
         <tr>
             <td><%= new Date(item.Date).toLocaleDateString('en-CA') %></td>
+            <td><%= item.Month && item.Month.length > 0 ? item.Month[0] : '' %></td>
             <td><%= item.Account && item.Account.length > 0 ? item.Account[0] : '' %></td>
             <td><%= item.payment && item.payment.length > 0 ? item.payment[0] : '' %></td>
             <td><%= item.Mode && item.Mode.length > 0 ? item.Mode[0] : '' %></td>

@@ -38,6 +38,26 @@
            value="<%= data.Date ? new Date(data.Date).toISOString().split('T')[0] : '' %>" required>
   </div>
   <div class="mb-3">
+  <label class="form-label small fw-semibold">Month</label>
+
+  <select name="month" class="form-control" required>
+    <option><%= data.Month %></option>
+
+    <option value="January" <%= data.month === 'January' ? 'selected' : '' %>>January</option>
+    <option value="February" <%= data.month === 'February' ? 'selected' : '' %>>February</option>
+    <option value="March" <%= data.month === 'March' ? 'selected' : '' %>>March</option>
+    <option value="April" <%= data.month === 'April' ? 'selected' : '' %>>April</option>
+    <option value="May" <%= data.month === 'May' ? 'selected' : '' %>>May</option>
+    <option value="June" <%= data.month === 'June' ? 'selected' : '' %>>June</option>
+    <option value="July" <%= data.month === 'July' ? 'selected' : '' %>>July</option>
+    <option value="August" <%= data.month === 'August' ? 'selected' : '' %>>August</option>
+    <option value="September" <%= data.month === 'September' ? 'selected' : '' %>>September</option>
+    <option value="October" <%= data.month === 'October' ? 'selected' : '' %>>October</option>
+    <option value="November" <%= data.month === 'November' ? 'selected' : '' %>>November</option>
+    <option value="December" <%= data.month === 'December' ? 'selected' : '' %>>December</option>
+  </select>
+</div>
+  <div class="mb-3">
     <label class="form-label small fw-semibold">Account</label>
     <select name="pay" class="form-control" required>
       <option><%= data.Account %></option>

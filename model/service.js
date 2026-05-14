@@ -5,6 +5,10 @@ const serviceSchema = new mongoose.Schema({
         type:Date,
         required:true,
     },
+    Month: {
+        type:[String],
+        required:true,
+    },
     Account: {
         type:[String],
         required:true

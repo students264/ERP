@@ -10,14 +10,18 @@ const employeeSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
-    status: {
-        type: [String],
+    Day: {
+        type: String,
         required: true,
     },
     Month: {
-        type: [String],
+        type: String,
         required: true,
-    }
+    },
+    Status: {
+        type: String,
+        required: true,
+    },
 }, { timestamps: true })
 
 const employeeModel = mongoose.model('employee', employeeSchema)

@@ -24,7 +24,7 @@
             </div>
         </div>
     </nav>
-    <div class="container-fluid mt-3">
+    <div class="container-fluid mt-2">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -34,12 +34,30 @@
     <div class="row g-2 align-items-end">
         <div class="col">
             <label class="form-label fw-bold">Received from</label>
-            <input type="text" name="s_name" class="form-control" required style="width:400px;">
+            <input type="text" name="s_name" class="form-control" required style="width:300px;">
         </div>
         <div class="mb-3">
-                <label class="form-label small fw-semibold">Joining Date</label>
-                <input type="date" name="date" class="form-control" required style="width:400px;">
+                <label class="form-label small fw-semibold">Date</label>
+                <input type="date" name="date" class="form-control" required style="width:300px;">
         </div>
+        <div class="mb-3">
+                <label class="form-label small fw-semibold">Month</label>
+                <select name="month" class="form-control" required style="width:300px;">
+                  <option value="">Select Month</option>
+                  <option>January</option>
+                  <option>February</option>
+                  <option>March</option>
+                  <option>April</option>
+                  <option>May</option>
+                  <option>June</option>
+                  <option>July</option>
+                  <option>August</option>
+                  <option>September</option>
+                  <option>October</option>
+                  <option>November</option>
+                  <option>December</option>
+                </select>
+              </div>
         <div class="col">
             <label class="form-label fw-bold">On Account of</label>
             <select name="pay" class="form-select" required>
@@ -83,7 +101,7 @@
     </div>
 </form>
                 </div>
-                <div class="row justify-content-center mb-4 mt-5">
+                <div class="row justify-content-center mb-4 mt-4">
                 <div class="col-md-6">
                     <div class="input-group shadow-sm">
                         <span class="input-group-text bg-primary text-white">
@@ -105,7 +123,8 @@
                     <thead class="table-primary">
                         <tr>
                             <th>Received from</th>
-                            <th>Joining Date</th>
+                            <th>Date</th>
+                            <th>Month</th>
                             <th>On Account of</th>
                             <th>Payment Type</th>
                             <th>Mode</th>
@@ -128,6 +147,7 @@
         <tr>
             <td><%= item.s_name %></td>
             <td><%= new Date(item.Date).toLocaleDateString('en-CA') %></td>
+            <td><%= item.Month && item.Month.length > 0 ? item.Month[0] : '' %></td>
             <td><%= item.Account && item.Account.length > 0 ? item.Account[0] : '' %></td>
             <td><%= item.payment && item.payment.length > 0 ? item.payment[0] : '' %></td>
             <td><%= item.Mode && item.Mode.length > 0 ? item.Mode[0] : '' %></td>

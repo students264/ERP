@@ -142,13 +142,14 @@ app.post('/add', async (req, res) => {
 });
 app.post('/employee', async (req, res) => {
   try {
-    const { name, date, status, month} = req.body;
+    const { name, date, day, month,status} = req.body;
 
     const result = await employeeModel.create({
   s_name: name,
   Date: new Date(date),
-  status : Array.isArray(status) ? status : [status],
-  Month : Array.isArray(month) ? month : [month]
+  Day:day,
+  Month : month,
+  Status : status,
 });
     res.redirect('/employee/attendance');
 
@@ -172,11 +173,12 @@ app.get('/payment/edit/:id', async (req, res) => {
 });
 app.post('/payment/insert', async (req, res) => {
   try {
-    const { s_name, date, pay , type , mode , amount} = req.body;
+    const { s_name, date, month , pay , type , mode , amount} = req.body;
 
     await paymentmodel.create({
   s_name: s_name,
   Date: new Date(date),
+  Month: Array.isArray(month) ? month : [month],
   Account: Array.isArray(pay) ? pay : [pay],
   payment: Array.isArray(type) ? type : [type],
   Mode : Array.isArray(mode) ? mode : [mode],
@@ -247,9 +249,6 @@ app.get('/employee/attendance',async(req,res)=>{
     const data = await employeeModel.find()
     return res.render('employee',{data})
 })
-/*app.get('/payment/edit/:id',async(req,res)=>{
-    const 
-})*/
 app.get('/student/attendance/:id',async(req,res)=>{
   const id = req.params.id
   const data = await attandancemodel.findOne({_id:id})
@@ -264,6 +263,7 @@ app.post('/payment/edit/',async(req,res)=>{
   try{
   const {s_name,
       date,
+      month,
       pay,
       type,
       mode,
@@ -274,6 +274,7 @@ app.post('/payment/edit/',async(req,res)=>{
       {
         $set: {
            Date : new Date(date),
+           Month: Array.isArray(month) ? month : [month],
            Account: Array.isArray(pay) ? pay : [pay],
            Payment: Array.isArray(type) ? type : [type],
            Mode: Array.isArray(mode) ? mode : [mode],
@@ -349,10 +350,10 @@ app.get('/income',async(req,res)=>{
 })
 app.post('/income/insert', async (req, res) => {
   try {
-    const { date, pay , type , mode , amount} = req.body;
-
+    const { date , month , pay , type , mode , amount} = req.body;
     await servicemodel.create({
   Date: new Date(date),
+  Month: Array.isArray(month) ? month : [month],
   Account: Array.isArray(pay) ? pay : [pay],
   payment: Array.isArray(type) ? type : [type],
   Mode : Array.isArray(mode) ? mode : [mode],
@@ -372,11 +373,8 @@ app.get('/service/delete/:id',async(req,res)=>{
 app.get('/service/edit/:id', async (req, res) => {
     try {
         const id = req.params.id;
-
         const data = await servicemodel.findById(id);
-
         return res.render('income-update', { data });
-
     } catch (err) {
         console.log(err);
         res.send("Error");
@@ -386,6 +384,7 @@ app.post('/income/edit/',async(req,res)=>{
   try{
   const {id,
       date,
+      month,
       pay,
       type,
       mode,
@@ -395,6 +394,7 @@ app.post('/income/edit/',async(req,res)=>{
       {
         $set: {
            Date : new Date(date),
+           Month: Array.isArray(month) ? month : [month],
            Account: Array.isArray(pay) ? pay : [pay],
            Payment: Array.isArray(type) ? type : [type],
            Mode: Array.isArray(mode) ? mode : [mode],
@@ -418,7 +418,6 @@ app.get('/expence',async(req,res)=>{
 app.post('/expence/insert', async (req, res) => {
   try {
     const { date, month , pay , mode ,receiver, amount} = req.body;
-
     await expencemodel.create({
   Date: new Date(date),
   Month: Array.isArray(month) ? month : [month],
@@ -441,11 +440,8 @@ app.get('/expence/delete/:id',async(req,res)=>{
 app.get('/expence/edit/:id', async (req, res) => {
     try {
         const id = req.params.id;
-
         const data = await expencemodel.findById(id);
-
         return res.render('expence-update', { data });
-
     } catch (err) {
         console.log(err);
         res.send("Error");
@@ -481,6 +477,30 @@ app.post('/expence/edit/',async(req,res)=>{
     console.error(err);
     res.send('Update failed');
   }
+})
+app.get('/search', async (req, res) => {
+    const { name, person } = req.query;
+    let data = [];
+    let msg = '';
+    if (person === "Teacher") {
+        data = await employeeModel.find({ s_name: name });
+    } else if (person === "Student") {
+        data = await attendanceModel.find({ s_name: name });
+    }
+    if (data.length === 0) {
+        msg = `No such ${person} Found`;
+        return res.render('Track-attendance', { data, msg });
+    }
+    return res.render('Track-attendance', { data, msg });
+});
+app.get('/track/attendance', async (req, res) => {
+    let data = [];
+    let msg = '';
+    return res.render('Track-attendance', { data, msg });
+});
+app.get('/profit',(req,res)=>{
+  
+  return res.render('profit')
 })
 app.listen(port, (err) => {
     if (err) {
