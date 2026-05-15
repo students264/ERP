@@ -499,9 +499,74 @@ app.get('/track/attendance', async (req, res) => {
     return res.render('Track-attendance', { data, msg });
 });
 app.get('/profit',(req,res)=>{
-  
-  return res.render('profit')
+    let studentTotal = 0;
+    let serviceTotal = 0;
+    let expenseTotal = 0;
+    let profit = 0;
+    res.render('profit', {
+        studentTotal,
+        serviceTotal,
+        expenseTotal,
+        profit
+    });
 })
+app.get('/track', async (req, res) => {
+    const { month, year } = req.query;
+    const months = {
+        January: 0,
+        February: 1,
+        March: 2,
+        April: 3,
+        May: 4,
+        June: 5,
+        July: 6,
+        August: 7,
+        September: 8,
+        October: 9,
+        November: 10,
+        December: 11
+    };
+    const monthIndex = months[month];
+    const startDate = new Date(year, monthIndex, 1);
+    const endDate = new Date(year, monthIndex + 1, 1);
+    const studentData = await paymentmodel.find({
+        Date: {
+            $gte: startDate,
+            $lt: endDate
+        }
+    });
+    const serviceData = await servicemodel.find({
+        Date: {
+            $gte: startDate,
+            $lt: endDate
+        }
+    });
+    const expenseData = await expencemodel.find({
+        Date: {
+            $gte: startDate,
+            $lt: endDate
+        }
+    });
+    let studentTotal = 0;
+    let serviceTotal = 0;
+    let expenseTotal = 0;
+    studentData.forEach(item => {
+        studentTotal += Number(item.Amount);
+    });
+    serviceData.forEach(item => {
+        serviceTotal += Number(item.Amount);
+    });
+    expenseData.forEach(item => {
+        expenseTotal += Number(item.Amount);
+    });
+    let profit = (studentTotal + serviceTotal) - expenseTotal;
+    res.render('profit', {
+        studentTotal,
+        serviceTotal,
+        expenseTotal,
+        profit
+    });
+});
 app.listen(port, (err) => {
     if (err) {
         console.error('error occur', err)

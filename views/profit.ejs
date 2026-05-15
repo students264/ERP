@@ -99,7 +99,7 @@
                     </h5>
 
                     <h2 class="text-center mt-3">
-                        ₹ 0
+                        ₹ <%= studentTotal || 0 %>
                     </h2>
 
                 </div>
@@ -113,7 +113,7 @@
                         Total Income from Service
                     </h5>
                     <h2 class="text-center mt-3">
-                        ₹ 0
+                        ₹ <%= serviceTotal || 0 %>
                     </h2>
                 </div>
             </div>
@@ -123,7 +123,19 @@
                         Total Expenses
                     </h5>
                     <h2 class="text-center mt-3">
-                        ₹ 0
+                        ₹ <%= expenseTotal || 0 %>
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5 g-4">
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 p-4">
+                    <h5 class="text-center fw-bold text-danger">
+                        Profit
+                    </h5>
+                    <h2 class="text-center mt-3">
+                        ₹ <%= profit || 0 %>
                     </h2>
                 </div>
             </div>
