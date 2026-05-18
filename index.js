@@ -2,6 +2,8 @@ const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
 const jwt = require('jsonwebtoken')
+const session=require('express-session');
+const { chromium } = require("playwright");
 const Admin = require('./model/admin')
 const studentmodel = require('./model/student')
 const attandancemodel = require('./model/attandance')
@@ -20,20 +22,193 @@ app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.set('view engine', 'ejs')
 app.set('views', path.resolve(__dirname, 'views'))
-
+app.use(
+  session({
+    secret: "progyan-secret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 1000 * 60 * 30,
+    },
+  })
+);
 mongoose.connect(process.env.MONGO_URI).then(()=>{
     console.log('mongodb connect')
 }).catch((err)=>{
     console.log('mongodb conection error',err)
 })
-app.get('/', isLoggined,(req, res) => {
-    return res.render('home')
-})
+app.get('/', isLoggined, (req, res) => {
+    let status = req.cookies.status
+    return res.render('home',{status});
+});
+app.post('/payment/check/', async (req, res) => {
+  try {
+    if (!req.session.billData) {
+      req.session.billData = [];
+    }
+    const { date1, date2 } = req.body;
+    const startDate = new Date(date1);
+    const endDate = new Date(date2);
+    endDate.setDate(endDate.getDate() + 1);
+    const data = await paymentmodel.find({
+      Date: {
+        $gte: startDate,
+        $lt: endDate
+      }
+    });
+    if (data.length === 0) {
+      return res.render("paybill",{msg:'NO Record Found',data});
+    }
+    const date = new Date().toLocaleDateString()
+    req.session.billData = [];
+    data.forEach(item => {
+      req.session.billData.push({
+        date:date,
+        Name: item.s_name,
+        mr: item.mr,
+        Date: item.Date,
+        Month: item.Month,
+        year: item.Year,
+        Account: item.Account,
+        payment: item.payment,
+        Mode: item.Mode,
+        rn: item.rn,
+        Amount: item.Amount
+      });
+    });
+    res.render('paybill', { data: req.session.billData , msg:' '});
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+app.post('/expence/check/', async (req, res) => {
+  try {
+    if (!req.session.expenceData) {
+      req.session.expenceData = [];
+    }
+    const { date1, date2 } = req.body;
+    const startDate = new Date(date1);
+    const endDate = new Date(date2);
+    endDate.setDate(endDate.getDate() + 1);
+    const data = await expencemodel.find({
+      Date: {
+        $gte: startDate,
+        $lt: endDate
+      }
+    });
+    if (data.length === 0) {
+      return res.render("expbill",{msg:'NO Record Found',data});
+    }
+    const date = new Date().toLocaleDateString()
+    req.session.expenceData = [];
+    data.forEach(item => {
+      req.session.expenceData.push({
+        date:date,
+        year: item.year,
+        Month: item.Month,
+        Date: item.Date,
+        pay: item.Pay,
+        Mode: item.Mode,
+        Reciept: item.Reciept,
+        rn: item.rn,
+        Amount: item.Amount
+      });
+    });
+    res.render('expbill', { data: req.session.expenceData,msg:' '});
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+app.get('/payment/std', (req, res) => {
+  if (!req.session.billData || req.session.billData.length === 0) {
+    return res.send("No bill data found");
+  }
+  res.render('paybill', { data: req.session.billData,msg:' '});
+});
+app.get("/payment/download-pdf", async (req, res) => {
+  const browser = await chromium.launch();
+  const context = await browser.newContext();
+  if (req.headers.cookie) {
+    const cookieValue = req.headers.cookie.split("connect.sid=")[1]?.split(";")[0];
+    if (cookieValue) {
+      await context.addCookies([
+        {
+          name: "connect.sid",
+          value: cookieValue,
+          url: "http://localhost:4000",
+        },
+      ]);
+    }
+  }
 
+  const page = await context.newPage();
+  await page.goto("http://localhost:4000/payment/std", {
+    waitUntil: "networkidle",
+  });
+  const pdfBuffer = await page.pdf({
+    width: "10in",
+    height: "14in",
+    printBackground: true,
+    margin: {
+        top: "10px",
+        right: "10px",
+        bottom: "10px",
+        left: "10px",
+    }
+});
+  await browser.close();
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", "attachment; filename=bill.pdf");
+  res.end(pdfBuffer);
+  req.session.billData = [];
+});
+app.get('/bill/expence', (req, res) => {
+  if (!req.session.expenceData || req.session.expenceData.length === 0) {
+    return res.send("No bill data found");
+  }
+  res.render('expbill', { data: req.session.expenceData,msg:' '});
+});
+app.get("/expence/download-pdf", async (req, res) => {
+  const browser = await chromium.launch();
+  const context = await browser.newContext();
+  if (req.headers.cookie) {
+    const cookieValue = req.headers.cookie.split("connect.sid=")[1]?.split(";")[0];
+    if (cookieValue) {
+      await context.addCookies([
+        {
+          name: "connect.sid",
+          value: cookieValue,
+          url: "http://localhost:4000",
+        },
+      ]);
+    }
+  }
+  const page = await context.newPage();
+  await page.goto("http://localhost:4000/bill/expence", {
+    waitUntil: "networkidle",
+  });
+  const pdfBuffer = await page.pdf({
+    width: "10in",
+    height: "14in",
+    printBackground: true,
+    margin: {
+        top: "10px",
+        right: "10px",
+        bottom: "10px",
+        left: "10px",
+    }
+  })
+  await browser.close();
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", "attachment; filename=bill.pdf");
+  res.end(pdfBuffer);
+  req.session.expenceData = [];
+});
 app.get('/admin/login', (req, res) => {
     return res.render('admin_login')
 })
-
 app.get('/admin/admission', isLoggined,(req, res) => {
     return res.render('Admission')
 })
@@ -44,9 +219,6 @@ app.get('/student/admission/list', isLoggined,async(req, res) => {
     let data = await studentmodel.find()
     return res.render('List_admission',{data})
 })
-app.get('/user/token/login', isLoggined,(req, res) => {
-    return res.render('login_token')
-})
 app.get('/student/record/add',isLoggined,(req,res)=>{
     return res.render('Add_record')
 })
@@ -54,37 +226,46 @@ app.get('/student/attandance/list',isLoggined,async(req,res)=>{
     let data = await studentmodel.find()
     return res.render('List_attandance',{data})
 })
-app.get('/student/payment',async(req,res)=>{
-  let data = await paymentmodel.find();
-    return res.render('payment-list',{data})
-})
+app.get('/student/payment', async (req, res) => {
+  try {
+    const data = await paymentmodel.find();
+    res.render('payment-list', {
+      data,
+      msg: ''
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server Error');
+  }
+});
 app.post('/admin_login', async (req, res) => {
   try {
     console.log("POST /admin_login HIT");
-
     const { userid, password } = req.body;
-
     const user = await Admin.findOne({ userid });
-
     if (!user || user.password !== password) {
       return res.render('admin_login', {
         msg: 'Invalid userid or password'
       });
     }
-
+    if (
+            user.userid === process.env.secret_id &&
+            user.password === process.env.secret_pass
+        ) {
+            res.cookie('status',"enabled",{httpOnly: true,maxAge: 12 * 60 * 60 * 1000})
+        } else {
+            res.cookie('status',"disabled",{httpOnly: true,maxAge: 12 * 60 * 60 * 1000})
+        }
     const token = jwt.sign(
       { userid: user.userid },
       process.env.JWT_SECRET,
       { expiresIn: '12h' }
     );
-
     res.cookie('login', token, {
       httpOnly: true,
       maxAge: 12 * 60 * 60 * 1000
     });
-
     res.redirect('/');
-
   } catch (err) {
     console.error(err);
     res.render('admin_login', { msg: 'Login failed' });
@@ -92,11 +273,9 @@ app.post('/admin_login', async (req, res) => {
 });
 app.get('/logout', (req, res) => {
   res.cookie('login', '', { maxAge: 0 });
+  res.cookie('status','', { maxAge: 0 });
   return res.redirect('/');
 });
-app.get('/admin/user/token',(req,res)=>{
-    return res.render('usertoken')
-})
 app.post('/student/add', async (req, res) => {
   try {
     const { name, date , address , mobile , type , board , Educational_Service , month } = req.body;
@@ -120,9 +299,7 @@ app.post('/student/add', async (req, res) => {
 });
 app.post('/add', async (req, res) => {
   try {
-
     const { name,date,day,month,status} = req.body;
-
     await attendanceModel.create(
       {
         s_name: name,
@@ -132,9 +309,7 @@ app.post('/add', async (req, res) => {
         Day:day
       }
     );
-
     res.redirect('/student/attandance/list');
-
   } catch (err) {
     console.error(err);
     res.status(500).send("fail to update");
@@ -173,18 +348,32 @@ app.get('/payment/edit/:id', async (req, res) => {
 });
 app.post('/payment/insert', async (req, res) => {
   try {
-    const { s_name, date, month , pay , type , mode , amount} = req.body;
+    const { s_name, mr, date, month, year , pay, type, mode, RN, amount } = req.body;
 
+const existing = await paymentmodel.findOne({ mr: mr });
+
+if (existing && existing.s_name !== s_name) {
+
+  const data = await paymentmodel.find();
+
+  return res.render('payment-list', {
+    data,
+    msg: 'This serial number belongs to another student'
+  });
+}
     await paymentmodel.create({
-  s_name: s_name,
-  Date: new Date(date),
-  Month: Array.isArray(month) ? month : [month],
-  Account: Array.isArray(pay) ? pay : [pay],
-  payment: Array.isArray(type) ? type : [type],
-  Mode : Array.isArray(mode) ? mode : [mode],
-  Amount : amount
-});
-   res.redirect('/student/payment')
+      s_name: s_name,
+      mr: mr,
+      Date: new Date(date),
+      Month: Array.isArray(month) ? month : [month],
+      Year:year,
+      Account: Array.isArray(pay) ? pay : [pay],
+      payment: Array.isArray(type) ? type : [type],
+      Mode: Array.isArray(mode) ? mode : [mode],
+      rn: RN || null,
+      Amount: amount
+    });
+    res.redirect('/student/payment');
   } catch (err) {
     console.error(err);
     res.status(500).send("fail to send");
@@ -203,10 +392,10 @@ app.post('/student/update', async (req, res) => {
       date,
       address,
       mobile,
-      course,
+      type , board , Educational_Service,
       month,
     } = req.body;
-
+    console.log(Educational_Service);
     const result = await studentmodel.updateOne(
       { _id: id },
       {
@@ -214,7 +403,9 @@ app.post('/student/update', async (req, res) => {
            Date : new Date(date),
            Address: address,
            Mobile: mobile,
-           course: Array.isArray(course) ? course : [course],
+           type: Array.isArray(type) ? type : [type],
+           board: Array.isArray(board) ? board : [board],
+           Educational_Service: Array.isArray(Educational_Service) ? Educational_Service : [Educational_Service],
            Month : Array.isArray(month) ? month : [month]
         }
       }
@@ -235,108 +426,37 @@ app.get('/payment/delete/:id',async(req,res)=>{
     await paymentmodel.deleteOne({_id : id})
     return res.redirect('/student/payment/')
 })
-app.get('/student/attendance/delete/:id',async(req,res)=>{
-    const id = req.params.id;
-    await attandancemodel.deleteOne({_id : id})
-    return res.redirect('/student/attandance/list')
-})
-app.get('/employee/delete/:id',async(req,res)=>{
-    const id = req.params.id;
-    await employeeModel.deleteOne({_id : id})
-    return res.redirect('/employee/attendance')
-})
-app.get('/employee/attendance',async(req,res)=>{
-    const data = await employeeModel.find()
-    return res.render('employee',{data})
-})
-app.get('/student/attendance/:id',async(req,res)=>{
-  const id = req.params.id
-  const data = await attandancemodel.findOne({_id:id})
-  return res.render('update-student-attendance',{data})
-})
-app.get('/employee/edit/:id',async(req,res)=>{
-  const id = req.params.id
-  const data = await employeeModel.findOne({_id:id})
-  return res.render('update-employee-attendance',{data})
-})
 app.post('/payment/edit/',async(req,res)=>{
   try{
-  const {s_name,
+  const {id,s_name,
+    mr,
       date,
       month,
+      year,
       pay,
       type,
       mode,
-      details,
+      RN,
       amount}=req.body
     const result = await paymentmodel.updateOne(
-      { s_name: s_name },
+      { _id: id },
       {
         $set: {
+           s_name: s_name,
+           mr: mr,
            Date : new Date(date),
            Month: Array.isArray(month) ? month : [month],
+           Year:year,
            Account: Array.isArray(pay) ? pay : [pay],
            Payment: Array.isArray(type) ? type : [type],
            Mode: Array.isArray(mode) ? mode : [mode],
-           Detail: details,
+           rn: RN,
            Amount: amount
         }
       }
     );
     if(result){
       return res.redirect('/student/payment')
-    }
-  }
-  catch (err) {
-    console.error(err);
-    res.send('Update failed');
-  }
-})
-app.post('/student/attendance/update',async(req,res)=>{
-  try{
-  const {id,name,
-      date,
-      status,
-      month
-    }=req.body
-    const result = await attandancemodel.updateOne(
-      { _id: id },
-      {
-        $set: {
-           Date : new Date(date),
-           status: Array.isArray(status) ? status : [status],
-           Month: Array.isArray(month) ? month : [month]
-        }
-      }
-    );
-    if(result.matchedCount != 0){
-      return res.redirect('/student/attandance/list')
-    }
-  }
-  catch (err) {
-    console.error(err);
-    res.send('Update failed');
-  }
-})
-app.post('/employee/attendance/update',async(req,res)=>{
-  try{
-  const {id,name,
-      date,
-      status,
-      month
-    }=req.body
-    const result = await employeeModel.updateOne(
-      { _id: id },
-      {
-        $set: {
-           Date : new Date(date),
-           status: Array.isArray(status) ? status : [status],
-           Month: Array.isArray(month) ? month : [month]
-        }
-      }
-    );
-    if(result.matchedCount != 0){
-      return res.redirect('/employee/attendance')
     }
   }
   catch (err) {
@@ -396,7 +516,7 @@ app.post('/income/edit/',async(req,res)=>{
            Date : new Date(date),
            Month: Array.isArray(month) ? month : [month],
            Account: Array.isArray(pay) ? pay : [pay],
-           Payment: Array.isArray(type) ? type : [type],
+           payment: Array.isArray(type) ? type : [type],
            Mode: Array.isArray(mode) ? mode : [mode],
            Amount: amount
         }
@@ -417,13 +537,15 @@ app.get('/expence',async(req,res)=>{
 })
 app.post('/expence/insert', async (req, res) => {
   try {
-    const { date, month , pay , mode ,receiver, amount} = req.body;
+    const { date, month , year , pay , mode , receiver , RN ,amount} = req.body;
     await expencemodel.create({
   Date: new Date(date),
   Month: Array.isArray(month) ? month : [month],
+  year:year,
   Pay: pay,
   Mode : Array.isArray(mode) ? mode : [mode],
   Reciept: receiver,
+  rn:RN,
   Amount : amount
 });
    res.redirect('/expence')
@@ -452,9 +574,11 @@ app.post('/expence/edit/',async(req,res)=>{
   const {id,
       date,
       month,
+      year,
       pay,
       mode,
       receiver,
+      RN,
       amount}=req.body
     const result = await expencemodel.updateOne(
       { _id: id },
@@ -462,9 +586,11 @@ app.post('/expence/edit/',async(req,res)=>{
         $set: {
            Date : new Date(date),
            Month: Array.isArray(month) ? month : [month],
+           year:year,
            Pay: pay,
            Mode: Array.isArray(mode) ? mode : [mode],
            Reciept: receiver,
+           rn:RN,
            Amount: amount
         }
       }
@@ -500,42 +626,21 @@ app.get('/track/attendance', async (req, res) => {
 });
 app.get('/profit',(req,res)=>{
     let studentTotal = 0;
-    let serviceTotal = 0;
     let expenseTotal = 0;
     let profit = 0;
     res.render('profit', {
         studentTotal,
-        serviceTotal,
         expenseTotal,
         profit
     });
 })
 app.get('/track', async (req, res) => {
     const { month, year } = req.query;
-    const months = {
-        January: 0,
-        February: 1,
-        March: 2,
-        April: 3,
-        May: 4,
-        June: 5,
-        July: 6,
-        August: 7,
-        September: 8,
-        October: 9,
-        November: 10,
-        December: 11
-    };
+    const months = {January: 0,February: 1,March: 2,April: 3,May: 4,June: 5,July: 6,August: 7,September: 8,October: 9,November: 10,December: 11};
     const monthIndex = months[month];
     const startDate = new Date(year, monthIndex, 1);
     const endDate = new Date(year, monthIndex + 1, 1);
     const studentData = await paymentmodel.find({
-        Date: {
-            $gte: startDate,
-            $lt: endDate
-        }
-    });
-    const serviceData = await servicemodel.find({
         Date: {
             $gte: startDate,
             $lt: endDate
@@ -553,20 +658,37 @@ app.get('/track', async (req, res) => {
     studentData.forEach(item => {
         studentTotal += Number(item.Amount);
     });
-    serviceData.forEach(item => {
-        serviceTotal += Number(item.Amount);
-    });
     expenseData.forEach(item => {
         expenseTotal += Number(item.Amount);
     });
-    let profit = (studentTotal + serviceTotal) - expenseTotal;
+    let profit = studentTotal - expenseTotal;
     res.render('profit', {
         studentTotal,
-        serviceTotal,
         expenseTotal,
         profit
     });
 });
+app.get('/attendance/delete/:id', async (req, res) => {
+  try {
+
+    const id = req.params.id;
+  
+    data = await attendanceModel.findOne({ _id: id });
+    if(data){
+      await attendanceModel.deleteOne({ _id: id });
+    }else{
+      await employeeModel.deleteOne({ _id: id });
+    }
+    res.redirect(req.get('Referer') || '/track/attendance');
+
+  } catch (error) {
+    console.log(error);
+    res.send("Delete Failed");
+  }
+});
+app.get('/employee/attendance',async(req,res)=>{
+  return res.render('employee')
+})
 app.listen(port, (err) => {
     if (err) {
         console.error('error occur', err)

@@ -1,8 +1,11 @@
 const mongoose = require('mongoose')
-
 const expenceSchema = new mongoose.Schema({
     Date:{
         type:Date,
+        required:true,
+    },
+    year:{
+        type: Number,
         required:true,
     },
     Month:{
@@ -20,6 +23,9 @@ const expenceSchema = new mongoose.Schema({
     Reciept: {
         type: String,
         required: true,
+    },
+    rn: {
+        type:Number,
     },
     Amount: {
         type:Number,

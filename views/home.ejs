@@ -48,6 +48,48 @@
 </head>
 
 <body>
+    <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Search</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/payment/check" method="post">
+            <label for="id1" class="form-label">Start Date:</label>
+            <input type="date" name="date1" id="id1" class="form-control">
+            <label for="id2" class="form-label">End Date:</label>
+            <input type="date" name="date2" id="id2" class="form-control">
+            <div class="d-flex justify-content-center align-items-center mt-3">
+                <button type="submit" class="btn btn-primary">Check payment Bill</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Search</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/expence/check" method="post">
+            <label for="id1" class="form-label">Start Date:</label>
+            <input type="date" name="date1" id="id1" class="form-control">
+            <label for="id2" class="form-label">End Date:</label>
+            <input type="date" name="date2" id="id2" class="form-control">
+            <div class="d-flex justify-content-center align-items-center mt-3">
+                <button type="submit" class="btn btn-primary">Check Expence Bill</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="navbar-custom text-white py-3 shadow">
     <div class="container d-flex justify-content-between align-items-center">
         <h4 class="mb-0 fw-bold">
@@ -119,16 +161,17 @@
     <div class="col-md-6">
         <a href="/student/attandance/list"
            class="btn btn-outline-dark btn-custom shadow-sm w-100">
-           <i class="bi bi-receipt"></i> Attendance
+           <i class="bi bi-receipt"></i> Student Attendance
         </a>
     </div>
-
+    <% if(status === 'enabled') { %>
     <div class="col-md-6">
         <a href="/income"
            class="btn btn-outline-primary btn-custom shadow-sm w-100">
-           &#8377 Income from Service
+           &#8377 Others Income
         </a>
     </div>
+    <% } %>
 
     <div class="col-md-6">
         <a href="/expence"
@@ -146,6 +189,18 @@
         <a href="/profit"
            class="btn btn-outline-danger btn-custom shadow-sm w-100">
             &#8377 Track Profit
+        </a>
+    </div>
+    <div class="col-md-6">
+        <a href="/payment/bill"
+           class="btn btn-outline-primary btn-custom shadow-sm w-100" data-bs-toggle="modal" data-bs-target="#exampleModal1">
+            &#x1F9FE MR Details 
+        </a>
+    </div>
+    <div class="col-md-6">
+        <a href="/expence/bill"
+           class="btn btn-outline-primary btn-custom shadow-sm w-100" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+            &#x1F9FE Expenses Details
         </a>
     </div>
 </div>

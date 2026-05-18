@@ -59,9 +59,7 @@
                             <th>Address</th>
                             <th>Mobile No</th>
                             <th>Type</th>
-                            <% if(data.length > 0 && data[0].type === "Coaching") { %>
     <th>Board</th>
-<% } %>
                             <th>Educational Service</th>
                             <th>Month</th>
                             <th>Update</th>
@@ -86,10 +84,14 @@
             <td><%= item.Mobile %></td>
             <td><%= item.type && item.type.length > 0 ? item.type[0] : '' %></td>
             <% if(item.type && item.type[0] === "Coaching") { %>
-            <td>
-                <%= item.board && item.board.length > 0 ? item.board[0] : '' %>
-            </td>
-        <% } %>
+    <td>
+        <%= item.board && item.board.length > 0 ? item.board[0] : '' %>
+    </td>
+<% } else { %>
+    <td>
+        --
+    </td>
+<% } %>
             <td><%= item.Educational_Service && item.Educational_Service.length > 0 ? item.Educational_Service[0] : '' %></td>
              <td><%= item.Month && item.Month.length > 0 ? item.Month[0] : '' %></td>
             <td>

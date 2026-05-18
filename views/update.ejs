@@ -48,24 +48,109 @@
     <input type="text" name="mobile" class="form-control" value = "<%= data.Mobile %>" required>
   </div>
   <div class="mb-3">
-    <label class="form-label small fw-semibold">Course</label>
-    <select name="course" class="form-control" required>
-      <option><%= data.course %></option>
+    <label class="form-label small fw-semibold">Education type</label>
 
-      <option value="MS-OFFICE" <%= data.course === 'MS-OFFICE' ? 'selected' : '' %>>MS-OFFICE</option>
-      <option value="TALLY" <%= data.course === 'TALLY' ? 'selected' : '' %>>TALLY</option>
-      <option value="GST" <%= data.course === 'GST' ? 'selected' : '' %>>GST</option>
-      <option value="TDS" <%= data.course === 'TDS' ? 'selected' : '' %>>TDS</option>
-      <option value="INCOME TAX" <%= data.course === 'INCOME TAX' ? 'selected' : '' %>>INCOME TAX</option>
-      <option value="ADV.EXCEL" <%= data.course === 'ADV.EXCEL' ? 'selected' : '' %>>ADV.EXCEL</option>
-      <option value="DTP" <%= data.course === 'DTP' ? 'selected' : '' %>>DTP</option>
-      <option value="GRAPHIC DESIGN" <%= data.course === 'GRAPHIC DESIGN' ? 'selected' : '' %>>GRAPHIC DESIGN</option>
-      <option value="INTERNET" <%= data.course === 'INTERNET' ? 'selected' : '' %>>INTERNET</option>
-      <option value="PYTHON" <%= data.course === 'PYTHON' ? 'selected' : '' %>>PYTHON</option>
-      <option value="WEB DEVELOPMENT" <%= data.course === 'WEB DEVELOPMENT' ? 'selected' : '' %>>WEB DEVELOPMENT</option>
+    <select name="type" id="type" class="form-control" required onchange="updateType()">
+        <option><%= data.type %></option>
+        <option value="Course" <%= data.type === 'Course' ? 'selected' : '' %>>
+            Course
+        </option>
+
+        <option value="Coaching" <%= data.type === 'Coaching' ? 'selected' : '' %>>
+            Coaching
+        </option>
 
     </select>
-  </div>
+</div>
+
+<!-- Coaching Section -->
+<div class="mb-3" id="one" style="display:none;">
+    <label class="form-label small fw-semibold">Educational_Service</label>
+
+    <select id="coaching" name="Educational_Service" class="form-control">
+        <option value="<%= data.Educational_Service %>">
+            <%= data.Educational_Service %>
+        </option>
+
+        <option value="class iii">class iii</option>
+        <option value="class iv">class iv</option>
+        <option value="class v">class v</option>
+        <option value="class vi">class vi</option>
+        <option value="class vii">class vii</option>
+        <option value="class viii">class viii</option>
+        <option value="class ix">class ix</option>
+        <option value="class x">class x</option>
+        <option value="class xi">class xi</option>
+    </select>
+</div>
+
+<div class="mb-3" id="two" style="display:none;">
+    <label class="form-label small fw-semibold">Course</label>
+<select id="course" name="Educational_Service" class="form-control">
+     <option value="<%= data.Educational_Service %>">
+            <%= data.Educational_Service %>
+        </option>
+     <option value="MS-OFFICE" <%= data.Educational_Service === 'MS-OFFICE' ? 'selected' : '' %>>MS-OFFICE</option>
+
+    <option value="TALLY" <%= data.Educational_Service === 'TALLY' ? 'selected' : '' %>>TALLY</option>
+
+    <option value="GST" <%= data.Educational_Service === 'GST' ? 'selected' : '' %>>GST</option>
+
+    <option value="TDS" <%= data.Educational_Service === 'TDS' ? 'selected' : '' %>>TDS</option>
+
+    <option value="INCOME TAX" <%= data.Educational_Service === 'INCOME TAX' ? 'selected' : '' %>>INCOME TAX</option>
+
+    <option value="ADV.EXCEL" <%= data.Educational_Service === 'ADV.EXCEL' ? 'selected' : '' %>>ADV.EXCEL</option>
+
+    <option value="DTP" <%= data.Educational_Service === 'DTP' ? 'selected' : '' %>>DTP</option>
+
+    <option value="GRAPHIC DESIGN" <%= data.Educational_Service === 'GRAPHIC DESIGN' ? 'selected' : '' %>>GRAPHIC DESIGN</option>
+
+    <option value="INTERNET" <%= data.Educational_Service === 'INTERNET' ? 'selected' : '' %>>INTERNET</option>
+
+    <option value="AUDIO & VIDEO EDITING" <%= data.Educational_Service === 'AUDIO & VIDEO EDITING' ? 'selected' : '' %>>AUDIO & VIDEO EDITING</option>
+
+    <option value="C++" <%= data.Educational_Service === 'C++' ? 'selected' : '' %>>C++</option>
+
+    <option value="JAVA(B)" <%= data.Educational_Service === 'JAVA(B)' ? 'selected' : '' %>>JAVA(B)</option>
+
+    <option value="PYTHON" <%= data.Educational_Service === 'PYTHON' ? 'selected' : '' %>>PYTHON</option>
+
+    <option value="HTML" <%= data.Educational_Service === 'HTML' ? 'selected' : '' %>>HTML</option>
+
+    <option value="Q BASIC" <%= data.Educational_Service === 'Q BASIC' ? 'selected' : '' %>>Q BASIC</option>
+
+    <option value="GW BASIC" <%= data.Educational_Service === 'GW BASIC' ? 'selected' : '' %>>GW BASIC</option>
+
+    <option value="SMALL BASIC" <%= data.Educational_Service === 'SMALL BASIC' ? 'selected' : '' %>>SMALL BASIC</option>
+
+    <option value="WEB DESIGN" <%= data.Educational_Service === 'WEB DESIGN' ? 'selected' : '' %>>WEB DESIGN</option>
+
+    <option value="ORACLE" <%= data.Educational_Service === 'ORACLE' ? 'selected' : '' %>>ORACLE</option>
+
+    <option value="WEB DEVELOPMENT" <%= data.Educational_Service === 'WEB DEVELOPMENT' ? 'selected' : '' %>>WEB DEVELOPMENT</option>
+
+    <option value="ENG. TYPING" <%= data.Educational_Service === 'ENG. TYPING' ? 'selected' : '' %>>ENG. TYPING</option>
+
+    <option value="SCHOOL COURSE" <%= data.Educational_Service === 'SCHOOL COURSE' ? 'selected' : '' %>>SCHOOL COURSE</option>
+
+    <option value="BENG. TYPING" <%= data.Educational_Service === 'BENG. TYPING' ? 'selected' : '' %>>BENG. TYPING</option>
+
+    <option value="SPOKEN ENGLISH" <%= data.Educational_Service === 'SPOKEN ENGLISH' ? 'selected' : '' %>>SPOKEN ENGLISH</option>
+
+    <option value="DIGITAL MARKERING" <%= data.Educational_Service === 'DIGITAL MARKERING' ? 'selected' : '' %>>DIGITAL MARKERING</option>
+    </select>
+</div>
+<div class="mb-3" id="three" style="display:none;">
+    <label class="form-label small fw-semibold">Board</label>
+   <select id="board" name="board" class="form-control">
+    <option value="<%= data.board ? data.board : '--' %>">
+        <%= data.board ? data.board : "--" %>
+    </option>
+    <option value="CBSE">CBSE</option>
+    <option value="ICSE">ICSE</option>
+</select>
+</div>
   <div class="mb-4">
   <label class="form-label small fw-semibold">Month</label>
 
@@ -98,6 +183,38 @@
     </div>
   </div>
 </div>
+<script>
+
+function updateType() {
+
+    let type = document.getElementById("type").value;
+
+    let coaching = document.getElementById("coaching");
+    let course = document.getElementById("course");
+
+    if(type === "Coaching") {
+
+        document.getElementById("one").style.display = "block";
+        document.getElementById("three").style.display = "block";
+        document.getElementById("two").style.display = "none";
+
+        coaching.disabled = false;
+        course.disabled = true;
+
+    } else {
+
+        document.getElementById("two").style.display = "block";
+        document.getElementById("one").style.display = "none";
+        document.getElementById("three").style.display = "none";
+
+        coaching.disabled = true;
+        course.disabled = false;
+    }
+}
+
+window.onload = updateType;
+
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

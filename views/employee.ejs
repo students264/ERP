@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attendance Management</title>
-
+     <style>
+      .no-focus:focus {
+    outline: none;
+    box-shadow: none;
+    border: none;
+    background: none;
+}
+     </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 </head>
@@ -12,7 +19,7 @@
 <body class="bg-light">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow" style="position:sticky;top:0px;z-index:1;">
         <div class="container">
             <a class="navbar-brand fw-bold" href="#">
                 Attendance Management
@@ -81,24 +88,23 @@
                         <tr>
                           <form action="/employee" method="post">
                             <td><input type="text" name="name" value = "<%= name %>" 
-              class="mb-2 border-0 text-center" readonly></td>
+              class="mb-2 border-0 text-center no-focus" readonly></td>
 
                             <td>
-                               <input type="date" name="date" class="mb-2 status-field border-0 text-center" readonly
+                               <input type="date" name="date" class="mb-2 status-field border-0 text-center no-focus"
               value="<%= new Date().toLocaleDateString('en-CA') %>">
                             </td>
 
                             <td>
-            <input type="text" name="day" class="mb-2 border-0 text-center" readonly
+            <input type="text" name="day" class="mb-2 border-0 text-center no-focus"
               value="<%= new Date().toLocaleString('en-US', { weekday: 'long' }) %>">
             </td>
-
                             <td>
-                                <input type="text" name="month" class="mb-2 border-0 text-center" readonly
+                                <input type="text" name="month" class="mb-2 border-0 text-center no-focus"
               value="<%= new Date().toLocaleString('en-US', { month: 'long' }) %>">
                             </td>
                             <td>
-  <input type="text" name="status" class="mb-2 status-field border-0 text-center" readonly>
+  <input type="text" name="status" class="mb-2 status-field border-0 text-center no-focus" readonly>
   <button type="button"
           class="btn btn-sm btn-success attendance-btn rounded-5"
           onclick="setAttendance(this, 'Present')">

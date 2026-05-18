@@ -6,12 +6,20 @@ const paymentSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    mr: {
+        type:Number,
+        required:true,
+    },
     Date:{
         type:Date,
         required:true,
     },
     Month: {
         type:[String],
+        required:true
+    },
+    Year: {
+        type: Number,
         required:true
     },
     Account: {
@@ -25,6 +33,9 @@ const paymentSchema = new mongoose.Schema({
     Mode: {
         type:[String],
         required: true,
+    },
+    rn:{
+        type:Number,
     },
     Amount: {
         type:Number,

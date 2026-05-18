@@ -7,7 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow" style="position:sticky;top:0px;z-index:1;">
         <div class="container">
             <a class="navbar-brand fw-bold" href="#">Fees Management</a>
 
@@ -76,9 +76,9 @@
   <select name="type" class="form-control" required>
     <option><%= data.payment %></option>
 
-    <option value="Down Payment" <%= data.payment === 'Down Payment' ? 'selected' : '' %>>Down Payment</option>
-    <option value="Monthly Fee" <%= data.payment === 'Monthly Fee' ? 'selected' : '' %>>Monthly Fee</option>
-    <option value="Others" <%= data.payment === 'Others' ? 'selected' : '' %>>Others</option>
+    <option value="Commission" <%= data.payment === 'Commission' ? 'selected' : '' %>>Commission</option>
+    <option value="Service fees" <%= data.payment === 'Service fees' ? 'selected' : '' %>>Service fees</option>
+    <option value="Metarial supply" <%= data.payment === 'Metarial supply' ? 'selected' : '' %>>Metarial supply</option>
   </select>
 </div>
 <div class="mb-4">

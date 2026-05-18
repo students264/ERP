@@ -9,7 +9,7 @@
 </head>
 
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow" style="position:sticky;top:0px;z-index:1;">
         <div class="container">
             <a class="navbar-brand fw-bold" href="#">Attendance Management</a>
 
@@ -67,6 +67,7 @@
                             <th>Day</th>
                             <th>Month</th>
                             <th>Status</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
 
@@ -86,6 +87,11 @@
             <td><%= item.Day %></td>
             <td><%= item.Month %></td>
             <td><%= item.Status %></td>
+            <td>
+                <a href="/attendance/delete/<%= item._id %>" class="btn btn-sm btn-danger">
+                    Delete
+                </a>
+            </td>
         </tr>
     <% }) %>
 </tbody>

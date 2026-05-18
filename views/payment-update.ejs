@@ -7,9 +7,9 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow" style="position:sticky;top:0px;z-index:1;">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">Admission Management</a>
+            <a class="navbar-brand fw-bold" href="#">Fees Management</a>
 
             <div class="d-flex gap-3">
                 <a href="/" class="btn btn-light btn-sm fw-bold">
@@ -32,8 +32,14 @@
         <div class="card-body">
           <form action="/payment/edit/" method="POST">
   <input type="hidden" name="id" value="<%= data._id %>">
-  <input type="hidden" name="s_name" value="<%= data.s_name %>">
-
+  <div class="mb-3">
+    <label class="form-label small fw-semibold">Name</label>
+    <input type="text" class="form-control" name="s_name" value="<%= data.s_name %>">
+  </div>
+  <div class="mb-3">
+    <label class="form-label small fw-semibold">M.R Number</label>
+    <input type="number" class="form-control" name="mr" value="<%= data.mr %>">
+  </div>   
   <div class="mb-3">
     <label class="form-label small fw-semibold">Date</label>
     <input type="date" name="date" class="form-control"
@@ -59,6 +65,10 @@
     <option value="December" <%= data.month === 'December' ? 'selected' : '' %>>December</option>
   </select>
 </div>
+<div class="col">
+            <label class="form-label fw-bold">Year</label>
+            <input type="number" name="year" class="form-control" required value="<%= data.Year %>">
+              </div>
   <div class="mb-3">
     <label class="form-label small fw-semibold">Account</label>
     <select name="pay" class="form-control" required>
@@ -84,7 +94,7 @@
 <div class="mb-4">
   <label class="form-label small fw-semibold">Mode</label>
 
-  <select name="mode" class="form-control" required>
+  <select name="mode" class="form-control" required onchange="showField(this.value)">
     <option><%= data.Mode %></option>
     
     <option value="CASH" <%= data.Mode === 'CASH' ? 'selected' : '' %>>CASH</option>
@@ -94,11 +104,10 @@
     <option value="Others" <%= data.Mode === 'Others' ? 'selected' : '' %>>Others</option>
   </select>
 </div>
-<div class="mb-3">
-    <label class="form-label small fw-semibold">Details</label>
-    <input type="text" name="details" class="form-control"
-           value="<%= data.Detail %>">
-  </div>
+   <div class="col" id="show" style="display:none;">
+            <label class="form-label fw-bold">Reference Number</label>
+            <input type="number" name="RN" class="form-control" style="width:300px;" value="<%= data.RN || 0 %>">
+    </div>
   <div class="mb-3">
     <label class="form-label small fw-semibold">Amount</label>
     <input type="number" name="amount" class="form-control"
@@ -116,6 +125,17 @@
     </div>
   </div>
 </div>
+<script>
+  function showField(value) {
+    const show = document.getElementById('show');
+
+    if (value === "UPI" || value === "CHEQUE" || value === "NEFT") {
+        show.style.display = "block";
+    } else {
+        show.style.display = "none";
+    }
+}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
